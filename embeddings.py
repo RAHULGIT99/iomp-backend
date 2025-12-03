@@ -11,12 +11,16 @@ PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 PINECONE_ENVIRONMENT = os.getenv("PINECONE_ENVIRONMENT")
 PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME")
 
-PDF_PATH = "./DotCom-CompanyProfile.pdf"
+PDF_PATH = "./Lic_doc.pdf"
 loader = PyPDFLoader(PDF_PATH)
 raw_docs = loader.load()
 
-# Dimensions
-# 768 for all-mpnet-base-v2
+# # Dimensions
+# # 768 for all-mpnet-base-v2
+
+pinecone_client = Pinecone(api_key=PINECONE_API_KEY)
+index = pinecone_client.Index(PINECONE_INDEX_NAME)
+
 
 CHUNK_SIZE = 1000
 CHUNK_OVERLAP = 200
@@ -28,12 +32,10 @@ chunked_docs = text_splitter.split_documents(raw_docs)
 
 # new url is https://rahulbro123-embedding-model.hf.space/get_embeddings
 def get_embeddings(texts):
-    response = requests.post("http://localhost:6000/embed", json={"texts": texts})
+    response = requests.post("https://rahulbro123-embedding-model.hf.space/get_embeddings", json={"texts": texts})
     response.raise_for_status()
     return response.json()["embeddings"]
 
-pinecone_client = Pinecone(api_key=PINECONE_API_KEY)
-index = pinecone_client.Index(PINECONE_INDEX_NAME)
 
 vectors = []
 for i, doc in enumerate(chunked_docs):
@@ -49,3 +51,9 @@ for i, doc in enumerate(chunked_docs):
 
 index.upsert(vectors=vectors)
 print(f"Successfully uploaded {len(vectors)} chunks to Pinecone index '{PINECONE_INDEX_NAME}'")
+
+
+# Delete all vectors inside the index
+# index.delete(delete_all=True)
+
+# print(" All vectors deleted successfully.")

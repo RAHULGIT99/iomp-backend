@@ -85,4 +85,3 @@ async def stt_sarvam(file: UploadFile = File(...), language_code: Optional[str] 
     # According to Sarvam docs, output might include “transcript” key
     transcript = resp_json.get("transcript") or resp_json.get("text") or ""
     return JSONResponse({"transcript": transcript})
-

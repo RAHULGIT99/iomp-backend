@@ -6,3 +6,6 @@ httpx
 pydantic
 pinecone
 python-multipart
+motor
+bcrypt
+PyJWT
