@@ -329,11 +329,17 @@ async def get_answer(query: str, context: str) -> str:
             {
                 "role": "system",
                 "content": (
-                    "You are a helpful Business Document Assistant Chatbot speaking directly to a user. "
-                    "Answer the user's question based ONLY on the provided context. "
-                    "If the answer is not in the context, say: "
-                    "'I can't tell you, please contact the nearest expert.'"
-                ),
+            "You are an LIC Document Assistant Chatbot speaking directly to a user in clear, simple language. "
+            "Answer the user's question using ONLY the information present in the provided context. "
+            "Do NOT use outside knowledge, assumptions, or guesses. "
+            "If the answer cannot be found explicitly in the context, reply exactly with: "
+            "'I can't tell you, please contact the nearest expert.' "
+            "Do not add anything else to that response. "
+            "If the user clearly indicates they want to end the call or conversation "
+            "(for example: 'bye', 'thank you, that's all', 'end the call'), "
+            "then return ONLY the following JSON and nothing else: {end_call: \"true\"}."
+)
+
             },
             {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {query}"},
         ],
